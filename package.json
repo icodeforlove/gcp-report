@@ -1,0 +1,23 @@
+{
+  "name": "gcp-report",
+  "version": "1.0.0",
+  "description": "Allows simple error reporting for \"Stack Driver: Error Reporting\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Chad Scira",
+    "email": "chadvscira@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/icodeforlove/gcp-report.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/error-reporting": "^0.5.1",
+    "ip": "^1.1.5",
+    "stack-trace": "0.0.10"
+  }
+}

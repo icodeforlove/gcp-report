@@ -51,8 +51,6 @@ async function processError ({service = 'node', version = 'latest', error, optio
 
 		errorEvent.setMessage(error.message || error);
 
-		errorEvent = deepExtend(errorEvent, options);
-
 		try {
 			let firstCallSiteObject = stackTrace.parse(error).shift();
 			errorEvent.context.reportLocation.filePath = firstCallSiteObject.fileName;
@@ -66,6 +64,8 @@ async function processError ({service = 'node', version = 'latest', error, optio
 		try {
 			errorEvent.context.user = ip.address();
 		} catch (e) {}
+
+		errorEvent = deepExtend(errorEvent, options);
 
 		errors.report(errorEvent, () => {
 			resolve();

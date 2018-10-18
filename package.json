@@ -1,6 +1,6 @@
 {
   "name": "gcp-report",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Allows simple error reporting for \"Stack Driver: Error Reporting\"",
   "main": "index.js",
   "scripts": {

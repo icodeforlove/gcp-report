@@ -1,6 +1,6 @@
 {
   "name": "gcp-report",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows simple error reporting for \"Stack Driver: Error Reporting\"",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/error-reporting": "^0.5.1",
+    "deep-extend": "^0.6.0",
     "ip": "^1.1.5",
     "stack-trace": "0.0.10"
   }

@@ -1,3 +1,4 @@
+const deepExtend = require('deep-extend');
 const stackTrace = require('stack-trace');
 const fs = require('fs');
 const ip = require('ip');
@@ -38,9 +39,9 @@ function readLineFromFile (filePath, line){
 	});
 };
 
-async function processError ({service = 'node', version = 'latest', error}) {
+async function processError ({service = 'node', version = 'latest', error, options = {}}) {
 	return new Promise(async (resolve, reject) => {
-		const errorEvent = errors.event();
+		let errorEvent = errors.event();
 
 		errorEvent.serviceContext = {service, version};
 
@@ -49,6 +50,8 @@ async function processError ({service = 'node', version = 'latest', error}) {
 		}
 
 		errorEvent.setMessage(error.message || error);
+
+		errorEvent = deepExtend(errorEvent, options);
 
 		try {
 			let firstCallSiteObject = stackTrace.parse(error).shift();
@@ -72,16 +75,16 @@ async function processError ({service = 'node', version = 'latest', error}) {
 
 
 let isCatchingUncaughtErrors = false;
-module.exports = ({service, version, catchUncaughtErrors}) => {
+module.exports = ({service, version, catchUncaughtErrors, options}) => {
 	if (catchUncaughtErrors && !isCatchingUncaughtErrors) {
 		process
 			.on('unhandledRejection', (error, p) => {
 				console.error(error, 'gcp-report: Unhandled Rejection at Promise', p);
-				processError({error, service, version}).then(() => {});
+				processError({error, service, version, options}).then(() => {});
 			})
 			.on('uncaughtException', error => {
 				console.error(error, 'gcp-report: Uncaught Exception thrown');
-				processError({error, service, version}).then(() => {
+				processError({error, service, version, options}).then(() => {
 					process.exit(1);
 				})
 			});
@@ -89,8 +92,9 @@ module.exports = ({service, version, catchUncaughtErrors}) => {
 		isCatchingUncaughtErrors = true;
 	}
 
-	return error => {
+	return (error, overrides = {}) => {
+		overrides = deepExtend(overrides, options);
 		console.log(error.stack || error);
-		return processError({error, service, version});
+		return processError({error, service, version, options: overrides});
 	}
 };
